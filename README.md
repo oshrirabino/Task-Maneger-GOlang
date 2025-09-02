@@ -60,11 +60,10 @@ A task management application built in **Go**, featuring both a **CLI mode** and
 
 ## Running the Program
 
-### CLI Mode
-```bash
-go run main.go
+for CLI mode just 'go run main.go' on bash
 
-### SERVER Mode
+### Server Mode
+
 go run main.go server
 
 Example curl Requests (Server)
