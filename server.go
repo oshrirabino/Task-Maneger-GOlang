@@ -38,7 +38,7 @@ func servAddTaskHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	logChan <- fmt.Sprintf("ADD TASK %s SUCCESSFULY WITH ID %d", task.Title, task.ID)
+	logChan <- fmt.Sprintf("ADD TASK %s SUCCESSFULY WITH ID %d\n", task.Title, task.ID)
 
 	// Respond with the created task as JSON
 	w.Header().Set("Content-Type", "application/json")
@@ -61,7 +61,7 @@ func servCompleteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	logChan <- fmt.Sprintf("Task %d Comleted", req.ID)
+	logChan <- fmt.Sprintf("Task %d Comleted\n", req.ID)
 
 	// Respond with status ok
 	w.Header().Set("Content-Type", "application/json")
@@ -84,7 +84,7 @@ func servRemoveHandlder(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	logChan <- fmt.Sprintf("TASK %d REMOVED", req.ID)
+	logChan <- fmt.Sprintf("TASK %d REMOVED\n", req.ID)
 
 	// Respond with status ok
 	w.Header().Set("Content-Type", "application/json")
@@ -105,7 +105,7 @@ func servListHandler(w http.ResponseWriter, r *http.Request) {
 		// default: return both (pending first, then completed)
 		result = append(pending, completed...)
 	}
-
+	logChan <- "LIST TASKS\n"
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(result); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -142,7 +142,8 @@ func servUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Remove completed tasks
-	removedTasks := RemoveComplitedTasks() // returns []Task
+	removedTasks := RemoveComplitedTasks()
+	logChan <- fmt.Sprintf("UPDATED, DELETED %d TASKS\n", len(removedTasks))
 
 	// Send removed tasks as JSON
 	w.Header().Set("Content-Type", "application/json")
